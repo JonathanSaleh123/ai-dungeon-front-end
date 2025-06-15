@@ -1,12 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useSession } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import ReactiveBackground from "@/components/ReactiveBackground";
 
 export default function AccountPage() {
   const { data: session, status } = useSession();
+  const [newUsername, setNewUsername] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
   if (status === "loading") {
     return (
@@ -33,6 +35,11 @@ export default function AccountPage() {
     );
   }
 
+  const handleUsernameChange = async () => {
+    // TODO: Implement username change API call
+    setIsEditing(false);
+  };
+
   return (
     <>
       <ReactiveBackground />
@@ -44,14 +51,46 @@ export default function AccountPage() {
               Account Settings
             </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8">
               {/* Profile Information */}
               <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
                 <h2 className="text-2xl font-semibold mb-4 text-purple-400">Profile Information</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
-                    <div className="text-white">{session?.user?.name}</div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                    {isEditing ? (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newUsername}
+                          onChange={(e) => setNewUsername(e.target.value)}
+                          className="bg-gray-700 text-white px-3 py-2 rounded flex-grow"
+                          placeholder="Enter new username"
+                        />
+                        <button
+                          onClick={handleUsernameChange}
+                          className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setIsEditing(false)}
+                          className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <div className="text-white">{session?.user?.name}</div>
+                        <button
+                          onClick={() => setIsEditing(true)}
+                          className="text-purple-400 hover:text-purple-300"
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
@@ -60,27 +99,8 @@ export default function AccountPage() {
                 </div>
               </div>
 
-              {/* Preferences */}
-              <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4 text-pink-400">Preferences</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <label className="text-gray-300">Dark Mode</label>
-                    <button className="w-12 h-6 bg-gray-600 rounded-full relative">
-                      <div className="w-4 h-4 bg-white rounded-full absolute left-1 top-1"></div>
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <label className="text-gray-300">Email Notifications</label>
-                    <button className="w-12 h-6 bg-purple-600 rounded-full relative">
-                      <div className="w-4 h-4 bg-white rounded-full absolute right-1 top-1"></div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
               {/* Account Actions */}
-              <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg md:col-span-2">
+              <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
                 <h2 className="text-2xl font-semibold mb-4 text-purple-400">Account Actions</h2>
                 <div className="space-y-4">
                   <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200">

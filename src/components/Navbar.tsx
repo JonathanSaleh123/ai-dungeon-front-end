@@ -34,6 +34,9 @@ const Navbar = () => {
             <Link href="/rooms" className="text-gray-300 hover:text-white transition-colors">
               Rooms
             </Link>
+            <Link href="/ai-settings" className="text-gray-300 hover:text-white transition-colors">
+              AI Settings
+            </Link>
             <Link href="/account" className="text-gray-300 hover:text-white transition-colors">
               <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center">
                 <span className="text-white text-sm">👤</span>
